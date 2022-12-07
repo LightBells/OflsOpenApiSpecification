@@ -1,0 +1,23 @@
+get:
+  summary: List all logs
+  tags:
+    - log
+  responses:
+    '200':
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseGetLogsSuccess"
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseInternalError'
+    default:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

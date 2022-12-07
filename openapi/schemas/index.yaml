@@ -1,0 +1,59 @@
+ResponseGetLogsSuccess:
+  type: object
+  properties:
+    logs:
+      type: array
+      items:
+        $ref: "#/components/schemas/Logs"
+      description: Multiple logs information
+Logs:
+  type: object
+  required:
+    - id
+    - date
+    - entry_time
+  properties:
+    id:
+      type: string
+      pattern: (s|m|d)\d{7}
+      example: s0000000
+    date:
+      type: string
+      format: date
+      example: 2000/00/00
+    entry_time:
+      type: string
+      pattern: \d{2}:\d{2}:\d{2}
+      example: 00:00:00
+    exit_time:
+      type: string
+      pattern: \d{2}:\d{2}:\d{2}
+      example: 02:00:00
+    purpose:
+      type: integer
+      example: 0
+    satisfication:
+      type: integer
+      example: 0
+ResponseInternalError:
+  type: object
+  required:
+    - code
+    - message
+  properties:
+    code:
+      type: integer
+      format: int32
+    message:
+      type: string
+Error:
+  type: object
+  required:
+    - code
+    - message
+  properties:
+    code:
+      type: integer
+      format: int32
+    message:
+      type: string

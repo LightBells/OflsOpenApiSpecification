@@ -1,78 +1,30 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Swagger Petstore
+  title: Open API / OFLS / Entrance Management System
   license:
     name: MIT
 servers:
-  - url: 'http://petstore.swagger.io/v1'
+  - url: http://localhost:8080/v1
 paths:
-  /pets:
+  /logs:
     get:
-      summary: List all pets
-      operationId: listPets
+      summary: List all logs
       tags:
-        - pets
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
+        - log
       responses:
         '200':
-          description: A paged array of pets
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
+          description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pets'
-        default:
-          description: unexpected error
+                $ref: '#/components/schemas/ResponseGetLogsSuccess'
+        '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      summary: Create a pet
-      operationId: createPets
-      tags:
-        - pets
-      responses:
-        '201':
-          description: Null response
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  '/pets/{petId}':
-    get:
-      summary: Info for a specific pet
-      operationId: showPetById
-      tags:
-        - pets
-      parameters:
-        - name: petId
-          in: path
-          required: true
-          description: The id of the pet to retrieve
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/ResponseInternalError'
         default:
           description: unexpected error
           content:
@@ -81,23 +33,54 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Pet:
+    ResponseGetLogsSuccess:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Logs'
+          description: Multiple logs information
+    Logs:
       type: object
       required:
         - id
-        - name
+        - date
+        - entry_time
       properties:
         id:
+          type: string
+          pattern: (s|m|d)\d{7}
+          example: s0000000
+        date:
+          type: string
+          format: date
+          example: 2000/00/00
+        entry_time:
+          type: string
+          pattern: \d{2}:\d{2}:\d{2}
+          example: '00:00:00'
+        exit_time:
+          type: string
+          pattern: \d{2}:\d{2}:\d{2}
+          example: '02:00:00'
+        purpose:
           type: integer
-          format: int64
-        name:
+          example: 0
+        satisfication:
+          type: integer
+          example: 0
+    ResponseInternalError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
           type: string
-        tag:
-          type: string
-    Pets:
-      type: array
-      items:
-        $ref: '#/components/schemas/Pet'
     Error:
       type: object
       required:
