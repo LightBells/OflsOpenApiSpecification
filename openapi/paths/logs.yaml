@@ -21,3 +21,6 @@ get:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+  security:
+  - Bearer: []
+  

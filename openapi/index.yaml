@@ -4,8 +4,110 @@ info:
 servers:
   - url: http://localhost:8080/v1
 paths:
-  /logs:
+  /logs/:
     $ref: './paths/logs.yaml'
+  /logs/monthly/{date}:
+    get:
+      summary: 年と月を指定してデータを取得する
+      tags:
+        - log
+      parameters:
+        - name: "date"
+          in: "path"
+          description: "取得したい年/月をYYYYMMの形式で指定"
+          required: true
+          type: string
+          pattern: \d{6}
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseGetLogsSuccess"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseInternalError'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Bearer: []
+
+  /logs/id/{id}:
+    get:
+      summary: 年と月を指定してデータを取得する
+      tags:
+        - log
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "取得したい学生の学籍番号を指定"
+          required: true
+          type: string
+          pattern: (s|m|d)\d{7}
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseGetLogsSuccess"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseInternalError'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Bearer: []
+  /login:
+    summary: Authentication Endpoint
+    post:
+      tags:
+        - auth
+      summary: 認証トークン(Bearer)の払い出し
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                password:
+                  type: string
+              required:
+                - id
+                - password
+      responses:
+        200:
+          description: 成功.
+        401:
+          description: 認証情報が違います.
+        500:
+          description: サーバーの内部エラー
+      
 components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      description: Credentials for API
   schemas:
     $ref: './schemas/index.yaml'
