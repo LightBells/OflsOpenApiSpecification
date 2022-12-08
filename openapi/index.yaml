@@ -43,7 +43,7 @@ paths:
 
   /logs/id/{id}:
     get:
-      summary: 年と月を指定してデータを取得する
+      summary: 学籍番号を指定してデータを取得する
       tags:
         - log
       parameters:
